@@ -9,6 +9,8 @@ env/
 .venv/
 .venv
 
+wishes.db
+
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints
 
