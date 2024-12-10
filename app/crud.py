@@ -51,6 +51,10 @@ def update_wish(wish_id: int, wish: WishUpdate):
 def delete_wish(wish_id: int):
     db = database.SessionLocal()
     db_wish = db.query(models.Wish).get(wish_id)
+
+    if not db_wish:
+        raise HTTPException(status_code=404, detail="Wish not found")
+
     if db_wish:
         db.delete(db_wish)
         db.commit()
