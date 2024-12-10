@@ -35,11 +35,16 @@ def create_wish(wish: WishCreate):
 def update_wish(wish_id: int, wish: WishUpdate):
     db = database.SessionLocal()
     db_wish = db.query(models.Wish).get(wish_id)
+
+    if not db_wish:
+        raise HTTPException(status_code=404, detail="Wish not found")
+
     if db_wish:
         for key, value in wish.dict().items():
             setattr(db_wish, key, value)
         db.commit()
         db.refresh(db_wish)
+
     db.close()
     return db_wish
 
