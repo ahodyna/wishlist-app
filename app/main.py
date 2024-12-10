@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from app import models, database, crud
 from app.schemas import WishCreate, WishUpdate
-from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
@@ -11,7 +10,6 @@ models.Base.metadata.create_all(bind=database.engine)
 def read_root():
     return {"message": "Welcome to the Wish List App"}
 
-# CRUD маршрути
 @app.get("/wishes/")
 def get_wishes():
     return crud.get_all_wishes()

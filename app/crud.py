@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from fastapi import HTTPException
 from app import models, database
 from app.schemas import WishCreate, WishUpdate
 
@@ -11,12 +11,26 @@ def get_all_wishes():
 
 def create_wish(wish: WishCreate):
     db = database.SessionLocal()
-    new_wish = models.Wish(**wish.dict())
-    db.add(new_wish)
-    db.commit()
-    db.refresh(new_wish)
-    db.close()
-    return new_wish
+    try:
+        existing_wish = db.query(models.Wish).filter_by(title=wish.title).first()
+        if existing_wish:
+            raise HTTPException(status_code=400, detail="Wish with the same name already exists.")
+
+        new_wish = models.Wish(**wish.dict())
+        db.add(new_wish)
+        db.commit()
+        db.refresh(new_wish)
+
+        print(f"New wish created: {new_wish.title}")
+
+        return new_wish
+
+    except Exception as e:
+        db.rollback()
+        raise e
+
+    finally:
+        db.close()
 
 def update_wish(wish_id: int, wish: WishUpdate):
     db = database.SessionLocal()
