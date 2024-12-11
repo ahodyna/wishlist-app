@@ -1,6 +1,7 @@
 from fastapi import HTTPException
 from app import models, database
 from app.schemas import WishCreate, WishUpdate
+from app.models import WishStatus
 
 def get_all_wishes():
     db = database.SessionLocal()
@@ -33,11 +34,18 @@ def create_wish(wish: WishCreate):
         db.close()
 
 def update_wish(wish_id: int, wish: WishUpdate):
+    if not isinstance(wish_id, int):
+        raise HTTPException(status_code=400, detail="Invalid wish_id, must be an integer.")
+
     db = database.SessionLocal()
     db_wish = db.query(models.Wish).get(wish_id)
 
     if not db_wish:
         raise HTTPException(status_code=404, detail="Wish not found")
+
+    if wish.status not in WishStatus:
+        raise HTTPException(status_code=400,
+                            detail=f"Invalid status, allowed values are: {', '.join([status.value for status in WishStatus])}")
 
     if db_wish:
         for key, value in wish.dict().items():
@@ -49,6 +57,9 @@ def update_wish(wish_id: int, wish: WishUpdate):
     return db_wish
 
 def delete_wish(wish_id: int):
+    if not isinstance(wish_id, int):
+        raise HTTPException(status_code=400, detail="Invalid wish_id, must be an integer.")
+
     db = database.SessionLocal()
     db_wish = db.query(models.Wish).get(wish_id)
 
