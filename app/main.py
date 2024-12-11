@@ -1,6 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from app import models, database, crud
-from app.schemas import WishCreate, WishUpdate
+from app.schemas import WishCreate, WishUpdate, SortByEnum
 
 app = FastAPI()
 
@@ -11,8 +11,8 @@ def read_root():
     return {"message": "Welcome to the Wish List App"}
 
 @app.get("/wishes/")
-def get_wishes():
-    return crud.get_all_wishes()
+def get_wishes(sort_by: SortByEnum = Query("created_at")):
+    return crud.get_all_wishes(sort_by)
 
 @app.post("/wishes/")
 def create_wish(wish: WishCreate):

@@ -1,14 +1,31 @@
 from fastapi import HTTPException
 from app import models, database
-from app.schemas import WishCreate, WishUpdate
-from app.models import WishStatus
+from app.schemas import WishCreate, WishUpdate, SortByEnum
+from app. models import WishStatus
+from typing import  Optional
 
-def get_all_wishes():
+
+def get_all_wishes( sort_by: Optional[SortByEnum] = None):
+
     db = database.SessionLocal()
-    wishes = db.query(models.Wish).all()
-    db.close()
-    print(wishes)
-    return wishes
+    try:
+        query = db.query(models.Wish)
+
+        if sort_by:
+            if sort_by == "created_at":
+                query = query.order_by(models.Wish.created_at)
+            elif sort_by == "priority":
+                query = query.order_by(models.Wish.priority)
+            elif sort_by == "status":
+                query = query.order_by(models.Wish.status)
+            else:
+                query = query.order_by(models.Wish.created_at)
+
+        wishes = query.all()
+        return wishes
+    finally:
+        db.close()
+
 
 def create_wish(wish: WishCreate):
     db = database.SessionLocal()

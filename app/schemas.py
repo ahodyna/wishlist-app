@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from enum import Enum
+from datetime import datetime
 
 class WishStatus(str, Enum):
     PENDING = "PENDING"
@@ -10,6 +11,9 @@ class WishBase(BaseModel):
     title: str
     description: str
     status: WishStatus
+    created_at: datetime
+    priority: int
+    category: str
 
 class WishCreate(WishBase):
     pass
@@ -22,3 +26,9 @@ class Wish(WishBase):
 
     class Config:
         orm_mode = True
+
+
+class SortByEnum(str, Enum):
+    created_at = "created_at"
+    priority = "priority"
+    status = "status"
