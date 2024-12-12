@@ -27,7 +27,6 @@ class Wish(WishBase):
     class Config:
         orm_mode = True
 
-
 class SortByEnum(str, Enum):
     created_at = "created_at"
     priority = "priority"

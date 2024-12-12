@@ -4,7 +4,6 @@ from app.schemas import WishCreate, WishUpdate, SortByEnum
 from app. models import WishStatus
 from typing import  Optional
 
-
 def get_all_wishes( sort_by: Optional[SortByEnum] = None):
 
     db = database.SessionLocal()
@@ -25,7 +24,6 @@ def get_all_wishes( sort_by: Optional[SortByEnum] = None):
         return wishes
     finally:
         db.close()
-
 
 def create_wish(wish: WishCreate):
     db = database.SessionLocal()
