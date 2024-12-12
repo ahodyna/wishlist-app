@@ -3,6 +3,3 @@ services:
     build: .
     ports:
       - "8080:8000"
-
-volumes:
-  wishlist_storage:

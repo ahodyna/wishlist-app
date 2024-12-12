@@ -13,7 +13,7 @@ Check the functionality of basic endpoints using swagger:
 You can run the project in several ways:
 
 ```
-docker-compose up
+docker compose up
 ```
 
 Or use the package manager [pip](https://pip.pypa.io/en/stable/) to install requirements.
